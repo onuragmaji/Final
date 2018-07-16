@@ -1,0 +1,25 @@
+<html>
+	<head>
+	<title>Profile Managment</title>
+	</head>
+	<body>
+		<h2>Profile Managment</h2>
+		<form action="http://127.0.0.1:5000/profile/addUser/" method="POST" id="onuform">
+                        <table><tr><td>Add a new user</td><td><button type="submit" id="onuform" value="Submit"><strong>Submit<strong><button></td></tr>
+                               <tr><td>USERNAME : </td><td><input type="text" name="userName"></td></tr>
+                               <tr><td>MOBILE NO : </td><td><input type="text" name="mobileNumber"></td></tr>
+                               <tr><td>PROFESSION : </td><td><input type="text" name="profession"></td></tr>
+                               <tr><td></td></tr>
+		 
+                   </table>
+                 </form>
+                 
+
+		<h4>DELETE A USER</h4>
+		<form action="http://127.0.0.1:5080/deleteUser" method="POST">
+		USERNAME : <input type="text" name="delete">&nbsp
+		<button type="submit" id="onuform" value="Submit"><strong>Delete</strong></button>
+		</form>
+
+	</body>
+</html>
