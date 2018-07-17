@@ -11,7 +11,21 @@ app.get('/listAllUsers',(req,res)=>{
 fs.readFile('./users.json', 'utf-8', function(err, data) {
 if (err) throw err
 var arrayOfObjects = JSON.parse(data)
-res.send(arrayOfObjects);
+
+var   userList="<tr><td>USER DETAILS LIST</td><tr>";
+
+arrayOfObjects.users.forEach((element)=>{
+   userList+="<tr><td>ID</td><td>"+element.id+"</td>\n"
+   userList+="<td>User Name</td><td>"+element.userName+"</td>\n"
+   userList+="<td>Image Name</td><td>"+element.imageName+"</td>\n"
+   userList+="<td>Mobile Number</td><td>"+element.mobileNumber+"</td>\n"
+   userList+="<td>Profession</td><td>"+element.profession+"</td>\n"
+   userList+="<td>Email Id</td><td>"+element.emailId+"</td></tr>\n"
+
+})
+
+
+ res.send("<html><body><table border=\'1\'>"+userList+"</table><body></html>");
 });
 
 });
@@ -57,18 +71,75 @@ res.send('<html><body><h1>Data Inserted Sucessfully</h1>'
 +'</body></html>');
 });
 
-app.post('/profile/upDateUser/',(req,res)=>{
-const email=req.body.email;
+
+app.post('/profile/userDetails/',(req,res)=>{
+const email=req.body.email; 
+var j=0;
 fs.readFile('./users.json', 'utf-8', function(err, data) {
 if (err) throw err
 var arrayOfObjects = JSON.parse(data);
 arrayOfObjects.users.forEach(function(element) {
-if(element.emailId == email){
+if(element.emailId === email){
+	j=1;
+	res.send('<html><body><h3>USER\'S DETAILS !!!</h3><form method="POST" id="onuform"><table boder="1">'
+	+'<tr><td>Email Id:</td><td><input type="text" name="emailId" disabled value="'+element.emailId+'"</td></tr>'
+	+'<tr><td>Image Name:</td><td><input type="text" name="imageName" disabled value="'+element.imageName+'"</td></tr>'
+	+'<tr><td>User Name:</td><td><input type="text" name="userName"disabled value="'+element.userName+'"</td></tr>'
+	+'<tr><td>Mobile Number:</td><td><input type="text" name="mobileNumber" disabled value="'+element.mobileNumber+'"</td></tr>'
+	+'<tr><td>Profession:</td><td><input type="text" name="profession" disabled value="'+element.profession+'"</td></tr>'
+	+'<table></form></body></html>');
+}
+/*else{
+	  res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');
+	}*/
+}
 
-//JSON.stringify(
 
-//console.log('Got it'+JSON.stringify(element));
 
+
+
+
+);
+
+if(j===0)
+{
+   res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');
+
+}
+
+})});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/profile/upDateUser/',(req,res)=>{
+const email=req.body.email;
+var j=0;
+fs.readFile('./users.json', 'utf-8', function(err, data) {
+if (err) throw err
+var arrayOfObjects = JSON.parse(data);
+arrayOfObjects.users.forEach(function(element) {
+console.log(typeof(element.emailId));
+console.log(typeof(email));
+
+
+if(element.emailId === email){
+
+j=1;
 res.send('<html><body><h3>UPDATE THE VALUES TO CHANGE</h3><form action="http://127.0.0.1:3000/profile/upDateUserSucessfull/'+element.id+'" method="POST" id="onuform"><table boder="1">'
 +'<tr><td>Email Id:</td><td><input type="text" name="emailId" disabled value="'+element.emailId+'"</td></tr>'
 +'<tr><td>Image Name:</td><td><input type="text" name="imageName" value="'+element.imageName+'"</td></tr>'
@@ -78,10 +149,11 @@ res.send('<html><body><h3>UPDATE THE VALUES TO CHANGE</h3><form action="http://1
 +'<tr><td><button type="submit" id="onuform" value="UPDATE"><strong>Submit</strong></button></tr></td>'
 +'<table></form></body></html>');}
 
-//else{res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');}
-
 });
 
+if(j===0){
+  res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');
+}
 })});
 
 
@@ -107,7 +179,7 @@ for(var i=0;i<arrayOfObjects.users.length;i++)
 	arrayOfObjects.users[i].profession=req.body.profession;
 	arrayOfObjects.users[i].mobileNumber=req.body.mobileNumber;
 
-} 
+ } 
 
 }
 
@@ -119,107 +191,43 @@ if (err) throw err
 res.send('<h1>Sucessfuly Updated</h1>');
 });
 
-app.post('/profile/deleteUser/',(req,res)=>{
-const email=req.body.email; 
-fs.readFile('./users.json', 'utf-8', function(err, data) {
-if (err) throw err
-var arrayOfObjects = JSON.parse(data);
-arrayOfObjects.users.forEach(function(element) {
-if(element.emailId === email){
-	//JSON.stringify(
-	//console.log('Got it'+JSON.stringify(element));
-	res.send('<html><body><h3>Are You Sure To Delete The User !!!</h3><form action="http://127.0.0.1:3000/profile/deleteUserSucessfull/'+element.id+'" method="POST" id="onuform"><table boder="1">'
-	+'<tr><td>Email Id:</td><td><input type="text" name="emailId" disabled value="'+element.emailId+'"</td></tr>'
-	+'<tr><td>Image Name:</td><td><input type="text" name="imageName" disabled value="'+element.imageName+'"</td></tr>'
-	+'<tr><td>User Name:</td><td><input type="text" name="userName"disabled value="'+element.userName+'"</td></tr>'
-	+'<tr><td>Mobile Number:</td><td><input type="text" name="mobileNumber" disabled value="'+element.mobileNumber+'"</td></tr>'
-	+'<tr><td>Profession:</td><td><input type="text" name="profession" disabled value="'+element.profession+'"</td></tr>'
-	+'<tr><td><button type="submit" id="onuform" value="UPDATE"><strong>Submit</strong></button></tr></td>'
-	+'<table></form></body></html>');}
-
-//else{res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');}
-});
-})});
-
-
-app.post('/profile/deleteUserSucessfull/:id',(req,res)=>{
-var i=0;
-// res.send('Hello');
-var j;
-fs.readFile('./users.json', 'utf-8', function(err, data) {
-var arrayOfObjects = JSON.parse(data)
-//console.log(arrayOfObjects);
-for(var i=0;i<arrayOfObjects.users.length;i++)
- {
-//Dout === and == 
-	if(arrayOfObjects.users[i].id == req.params.id){
-	j=i;
-	console.log(JSON.stringify(arrayOfObjects.users[i])+"We r in"+j);
-	delete arrayOfObjects.users[i];
- } 
-}
-fs.writeFile('./users.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-if (err) throw err
-console.log('JSON File updated!')});
-})//readFile*/
-res.send('<h1>Sucessfuly Deleted</h1>');
-});
-
-
-app.post('/profile/userDetails/',(req,res)=>{
-const email=req.body.email; 
-fs.readFile('./users.json', 'utf-8', function(err, data) {
-if (err) throw err
-var arrayOfObjects = JSON.parse(data);
-arrayOfObjects.users.forEach(function(element) {
-if(element.emailId === email){
-res.send('<html><body><h3>USER\'S DETAILS !!!</h3><form method="POST" id="onuform"><table boder="1">'
-+'<tr><td>Email Id:</td><td><input type="text" name="emailId" disabled value="'+element.emailId+'"</td></tr>'
-+'<tr><td>Image Name:</td><td><input type="text" name="imageName" disabled value="'+element.imageName+'"</td></tr>'
-+'<tr><td>User Name:</td><td><input type="text" name="userName"disabled value="'+element.userName+'"</td></tr>'
-+'<tr><td>Mobile Number:</td><td><input type="text" name="mobileNumber" disabled value="'+element.mobileNumber+'"</td></tr>'
-+'<tr><td>Profession:</td><td><input type="text" name="profession" disabled value="'+element.profession+'"</td></tr>'
-+'<table></form></body></html>');}
-//else{res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');}
-});
-})});
 
 app.post('/profile/deleteUserAjax/',(req,res)=>{
 const email=req.body.email; 
+var j=0;
 fs.readFile('./users.json', 'utf-8', function(err, data) {
 if (err) throw err
 var arrayOfObjects = JSON.parse(data);
 arrayOfObjects.users.forEach(function(element) {
-if(element.emailId === email){
+if(element!=null && element.emailId === email){
 
-var   userDelete="<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n";
-      userDelete+= "<script>function doDelete(){\n";
-      userDelete+= "alert('Hello');\n"
-      userDelete+="$.ajax({\n";
-      userDelete+="method: 'DELETE',\n";
-      userDelete+= "url: \"http://127.0.0.1:3000/profile/deleteUserAjax/"+element.id+"\""+",\n";
-      userDelete+= "});}</script>";
+	var   userDelete="<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n";
+	      userDelete+= "<script>function doDelete(){\n";
+	      userDelete+= "alert('Hello');\n"
+	      userDelete+="$.ajax({\n";
+	      userDelete+="method: 'DELETE',\n";
+	      userDelete+= "url: \"http://127.0.0.1:3000/profile/deleteUserAjax/"+element.id+"\""+",\n";
+	      userDelete+= "});}</script>";
 
-
-
-res.send('<html><body><h3>Are You Sure To Delete The User !!!</h3>'
-+userDelete
-+'<table>'
-+'<tr><td>Email Id:</td><td><input type=\"text\" name=\"emailId\" disabled value=\"'+element.emailId+'\"</td></tr>\n'
-+'<tr><td>Image Name:</td><td><input type="text" name="imageName" disabled value=\"'+element.imageName+'\"</td></tr>\n'
-+'<tr><td>User Name:</td><td><input type="text" name="userName"disabled value=\"'+element.userName+'\"</td></tr>\n'
-+'<tr><td>Mobile Number:</td><td><input type="text" name="mobileNumber" disabled value=\"'+element.mobileNumber+'\"</td></tr>\n'
-+'<tr><td>Profession:</td><td><input type="text" name="profession" disabled value=\"'+element.profession+'\"</td></tr>\n'
-+'<tr><td><button type="submit" value="UPDATE" onclick=\"doDelete()\">Submit</button></tr></td>'
-+'<table>'
-/*'<script>function del(){$.ajax({method:\'DELETE\','
-+ 'url:/profile/deleteUser/'+element.id
-+'success : function(data) { console.log(\'success\');},'
-+'error : function() {console.log(\'error\');}})}'
-+'function h(){alert(\'Hello\');document.getElementById("demo").innerHTML = "Hello World";console.log(\'I am Test\');}</script>'*/
-+'</body></html>');}
+	j=1;
+	res.send('<html><body><h3>Are You Sure To Delete The User !!!</h3>'
+	+userDelete
+	+'<table>'
+	+'<tr><td>Email Id:</td><td><input type=\"text\" name=\"emailId\" disabled value=\"'+element.emailId+'\"</td></tr>\n'
+	+'<tr><td>Image Name:</td><td><input type="text" name="imageName" disabled value=\"'+element.imageName+'\"</td></tr>\n'
+	+'<tr><td>User Name:</td><td><input type="text" name="userName"disabled value=\"'+element.userName+'\"</td></tr>\n'
+	+'<tr><td>Mobile Number:</td><td><input type="text" name="mobileNumber" disabled value=\"'+element.mobileNumber+'\"</td></tr>\n'
+	+'<tr><td>Profession:</td><td><input type="text" name="profession" disabled value=\"'+element.profession+'\"</td></tr>\n'
+	+'<tr><td><button type="submit" value="UPDATE" onclick=\"doDelete()\">Submit</button></tr></td>'
+	+'<table>'
+	+'</body></html>');}
 });
 
+if(j===0){
+
+   res.send('<html><body><h2>Sorry no such registered mail Id Exist</h2></body></html>');
+
+}
 })});
 
  app.delete('/profile/deleteUserAjax/:id', function (req, res) {
@@ -237,7 +245,19 @@ res.send('<html><body><h3>Are You Sure To Delete The User !!!</h3>'
 		delete arrayOfObjects.users[i];
     } 
 }
-fs.writeFile('./users.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
+var arrayOfObjectsNew={"users":[]};
+var k=0;
+for(var i=0;i<arrayOfObjects.users.length;i++)
+{
+
+    if(arrayOfObjects.users[i]!=null)
+    {
+         arrayOfObjectsNew.users[k++]=arrayOfObjects.users[i];
+    }
+}
+console.log(arrayOfObjectsNew);
+
+fs.writeFile('./users.json', JSON.stringify(arrayOfObjectsNew), 'utf-8', function(err) {
 if (err) throw err
    console.log('JSON File updated!')});
  })  
@@ -264,6 +284,5 @@ if (err) throw err
    console.log('JSON File updated!')});
  })  
 })
-
 const port=process.env.PORT || 3000;
 app.listen(port,()=>console.log('Listening on Port '+ port+'...........'));
